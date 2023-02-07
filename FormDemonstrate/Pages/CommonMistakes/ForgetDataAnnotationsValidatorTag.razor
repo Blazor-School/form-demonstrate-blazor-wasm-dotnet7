@@ -1,0 +1,20 @@
+﻿@page "/forget-data-annotations-validator-tag"
+@using FormDemonstration.FormModels.CommonMistakes
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>ForgetDataAnnotationsValidatorTag</h3>
+<EditForm Model="FormModel" OnSubmit='_ => Message = "Validation Message should be shown but because of there is no DataAnnotationsValidator tag."'>
+    @*<DataAnnotationsValidator />*@
+    <ValidationSummary />
+    <label>
+        Leave textbox empty to make validation error:
+        <InputText @bind-Value="FormModel.RequiredString" />
+    </label>
+    <button>Submit</button>
+</EditForm>
+@Message
+
+@code {
+    public ForgetDataAnnotationsValidatorTagFormModel FormModel { get; set; } = new();
+    public string Message { get; set; } = "";
+}

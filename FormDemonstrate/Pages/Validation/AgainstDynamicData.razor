@@ -1,0 +1,64 @@
+﻿@page "/validation-against-dynamic-data"
+@using FormDemonstration.FormModels.Validation
+@using Microsoft.AspNetCore.Components.Forms
+@implements IDisposable
+
+<h3>AgainstDynamicData</h3>
+<EditForm EditContext="FormContext">
+    <DataAnnotationsValidator />
+    <ValidationSummary Model="FormModel"/>
+    <div>
+        <label>
+            Allow text?
+            <InputRadioGroup @bind-Value="FormModel.AllowText">
+                <label>
+                    <InputRadio Value="true" />
+                    True
+                </label>
+                <label>
+                    <InputRadio Value="false" />
+                    False
+                </label>
+            </InputRadioGroup>
+        </label>
+    </div>
+    <div>
+        <label>
+            Text
+            <InputText @bind-Value="FormModel.Text"/>
+        </label>
+        <ValidationMessage For="() => FormModel.Text" />
+    </div>
+    <button>Submit</button>
+</EditForm>
+
+@code {
+    public EditContext FormContext { get; set; } = null!;
+    public AgainstDynamicDataFormModel FormModel { get; set; } = new();
+    public ValidationMessageStore ValidationMessageStore { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        FormContext = new(FormModel);
+        ValidationMessageStore = new(FormContext);
+        FormContext.OnFieldChanged += OnFormContextFieldChanged;
+    }
+
+    public void OnFormContextFieldChanged(object? sender, FieldChangedEventArgs e)
+    {
+        ValidationMessageStore.Clear();
+
+        if (FormModel.AllowText is false && string.IsNullOrEmpty(FormModel.Text) is false)
+        {
+            ValidationMessageStore.Add(FormContext.Field(nameof(FormModel.Text)), "This message is for the field!");
+            ValidationMessageStore.Add(FormContext.Field(string.Empty), "This message is for the entire form!");
+        }
+
+        FormContext.Validate();
+    }
+
+    public void Dispose()
+    {
+        FormContext.OnFieldChanged -= OnFormContextFieldChanged;
+    }
+}

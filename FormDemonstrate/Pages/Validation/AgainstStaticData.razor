@@ -1,0 +1,27 @@
+﻿@page "/validation-against-static-data"
+@using FormDemonstration.FormModels.Validation
+
+<h3>AgainstStaticData</h3>
+<EditForm Model="FormModel">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div>
+        <label>
+            Example string:
+            <InputText @bind-Value="FormModel.ExampleString" />
+        </label>
+    </div>
+    <ValidationMessage For="() => FormModel.ExampleString" />
+    <div>
+        <label>
+            Example number (must be greater than 2):
+            <InputNumber @bind-Value="FormModel.ExampleInt" />
+        </label>
+    </div>
+    <ValidationMessage For="() => FormModel.ExampleInt" />
+    <button>Submit</button>
+</EditForm>
+
+@code {
+    public AgainstStaticDataFormModel FormModel { get; set; } = new();
+}

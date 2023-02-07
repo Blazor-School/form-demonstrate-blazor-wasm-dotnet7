@@ -1,0 +1,28 @@
+﻿@page "/create-functioning-button-as-submit"
+@using FormDemonstration.FormModels.CommonMistakes
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>CreateFunctioningButtonAsSubmit</h3>
+<EditForm Model="FormModel" OnSubmit="Submit">
+    <button>Submit (button tag)</button>
+    <input type="submit" value="Submit (input tag)" />
+    <input type="button" @onclick="Method1" value="Call Method (input tag)" />
+    <button type="button" @onclick="Method1" value="">Call Method (button tag)</button>
+    <button @onclick="Method1">(Not Intended) Call Method & Submit</button>
+</EditForm>
+@((MarkupString)Log)
+
+@code {
+    public CreateFunctioningButtonAsSubmitFormModel FormModel { get; set; } = new();
+    public string Log { get; set; } = "";
+
+    public void Submit()
+    {
+        Log += $"<div><span class='text-primary'>{nameof(Submit)}</span> called</div>";
+    }
+
+    public void Method1()
+    {
+        Log+=$"<div><span class='text-primary'>{nameof(Method1)}</span> called</div>";
+    }
+}
